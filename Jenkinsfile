@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        DOCKER_IMAGE = 'divya16112002/jenkins'
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credential')
+        DOCKER_IMAGE = 'divya16112002/fastapi-app'
         
     }
 
