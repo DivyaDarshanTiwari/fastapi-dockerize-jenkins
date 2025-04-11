@@ -45,13 +45,11 @@ pipeline {
             }
         }
 
-        stages {
         stage('Check Docker Access') {
             steps {
                 sh 'docker --version'
             }
         }
-    }
         
         stage('Build & Push Docker Image') {
             steps {
