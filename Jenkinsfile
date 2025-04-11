@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:latest'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
     
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
@@ -14,6 +19,7 @@ pipeline {
             description: 'Docker image tag version'
         )
     }
+
     
     stages {
         stage('Checkout Code') {
@@ -38,6 +44,14 @@ pipeline {
                 '''
             }
         }
+
+        stages {
+        stage('Check Docker Access') {
+            steps {
+                sh 'docker --version'
+            }
+        }
+    }
         
         stage('Build & Push Docker Image') {
             steps {
