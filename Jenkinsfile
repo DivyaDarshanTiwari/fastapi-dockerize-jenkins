@@ -3,7 +3,8 @@ pipeline {
     
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        DOCKER_IMAGE = 'prateekrajgautam/devops-test-automation'
+        DOCKER_IMAGE = 'divya16112002/jenkins'
+        
     }
 
     parameters {
@@ -18,7 +19,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main', 
-                url: 'https://github.com/upessocs/devops-test-automation-jenkinsfile.git'
+                url: 'https://github.com/DivyaDarshanTiwari/fastapi-dockerize-jenkins.git'
             }
         }
         
@@ -40,17 +41,21 @@ pipeline {
         
         stage('Build & Push Docker Image') {
             steps {
-                script {
-                    def fullTag = "${env.DOCKER_IMAGE}:${params.IMAGE_TAG}-${env.BUILD_NUMBER}"
-                    sh """
-                        echo "Logging into Docker Hub..."
-                        docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW
-                        echo "Building Docker image with tag: ${fullTag}"
-                        docker build -t ${fullTag} .
-                        echo "Pushing image to Docker Hub..."
-                        docker push ${fullTag}
-                    """
-                }
+                    script {
+                        def fullTag = "${env.DOCKER_IMAGE}:${params.IMAGE_TAG}-${env.BUILD_NUMBER}"
+    
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-credential', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                            sh """
+                                echo "Logging into Docker Hub..."
+                               echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                               echo "Building Docker image with tag: ${fullTag}"
+                               docker build -t ${fullTag} .
+                               echo "Pushing image to Docker Hub..."
+                               docker push ${fullTag}
+                           """
+                       }
+                    }
+
             }
         }
     }
