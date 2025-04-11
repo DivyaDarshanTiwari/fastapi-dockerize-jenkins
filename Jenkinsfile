@@ -24,8 +24,8 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', 
-                url: 'https://github.com/DivyaDarshanTiwari/fastapi-dockerize-jenkins.git'
+                git url: 'https://github.com/DivyaDarshanTiwari/fastapi-dockerize-jenkins.git',
+                branch: 'main'
             }
         }
         
